@@ -10,24 +10,52 @@ import UIKit
 import SwiftyJSON
 import MBProgressHUD
 
-class MoviesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class MoviesViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate,
+    UISearchResultsUpdating {
     
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var moviesCollectionView: UICollectionView!
+    
     var movies: [Movie]?
-    
+    var filteredMovies: [Movie]?
+    var searchController: UISearchController!
     var uiRefreshControl : UIRefreshControl!
     @IBOutlet weak var errorView: UIView!
+    @IBOutlet weak var searchView: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.delegate = self;
-        tableView.dataSource = self;
+        moviesCollectionView.delegate = self;
+        moviesCollectionView.dataSource = self;
         
         // add refresh control
         uiRefreshControl = UIRefreshControl()
         uiRefreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
-        tableView.addSubview(uiRefreshControl)
+        moviesCollectionView.addSubview(uiRefreshControl)
+        
+        // set up for search bar
+//        searchController = UISearchController(searchResultsController: nil)
+//        searchController.searchResultsUpdater = self
+//        searchController.dimsBackgroundDuringPresentation = false
+//        searchController.searchBar.sizeToFit()
+//        searchView.addSubview(searchController.searchBar)
+//        
+//        automaticallyAdjustsScrollViewInsets = false
+//        definesPresentationContext = true
+//        
+        
+        searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.searchBar.sizeToFit()
+        searchController.searchBar.translucent = true
+        searchController.searchBar.barTintColor = UIColor.darkGrayColor()
+        
+        searchView.addSubview(searchController.searchBar)
+        automaticallyAdjustsScrollViewInsets = false
+        definesPresentationContext = true
+
+        
         
         loadData()
     }
@@ -55,10 +83,11 @@ class MoviesViewController: UIViewController, UITableViewDelegate, UITableViewDa
             completionHandler: { (dataOrNil, response, error) in
                 if let data = dataOrNil {
                     self.movies = Movie.getMovies(JSON(data : data))
+                    self.filteredMovies = self.movies
                     self.errorView.hidden = true
 
                     // reload view with new data
-                    self.tableView.reloadData()
+                    self.moviesCollectionView.reloadData()
                 } else {
                     self.errorView.hidden = false
                     if let e = error {
@@ -77,16 +106,36 @@ class MoviesViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // Dispose of any resources that can be recreated.
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("MovieCell", forIndexPath: indexPath) as! MovieCell
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {indexPath
+        let cell = moviesCollectionView.dequeueReusableCellWithReuseIdentifier("MovieCollectionViewCell", forIndexPath: indexPath) as! MovieCollectionViewCell
         
-        let movie = movies![indexPath.row]
+        let movie = filteredMovies![indexPath.row]
         cell.movie = movie
         return cell
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return movies?.count ?? 0;
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return filteredMovies?.count ?? 0;
+    }
+    
+//    func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
+//        if (kind == UICollectionElementKindSectionHeader) {
+//            let headerView = moviesCollectionView.dequeueReusableSupplementaryViewOfKind(UICollectionElementKindSectionHeader, withReuseIdentifier: "HeaderView", forIndexPath: indexPath)
+//            headerView.addSubview(self.searchController.searchBar)
+//            return headerView
+//        }
+//        return UICollectionReusableView()
+//    }
+    
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        if let searchText = searchController.searchBar.text {
+            
+            filteredMovies = searchText.isEmpty ? movies : movies?.filter({ (movie:Movie) -> Bool in
+                movie.title.rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
+            });
+            
+            moviesCollectionView.reloadData()
+        }
     }
 
     /*
