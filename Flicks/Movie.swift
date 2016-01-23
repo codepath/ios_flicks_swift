@@ -14,14 +14,16 @@ class Movie: NSObject {
 
     var title : String
     var overview : String
-    var posterPath : String
-    var posterUrl : NSURL {
+    var posterPath : String?
+    var posterUrl : NSURL? {
         get {
-            return NSURL(string: POSTER_BASE_URL + posterPath)!
+            return posterPath.map({ (path: String) -> NSURL in
+                NSURL(string: POSTER_BASE_URL + path)!
+            })
         }
     }
     
-    init(overview: String, title: String, posterPath: String) {
+    init(overview: String, title: String, posterPath: String?) {
         self.overview = overview
         self.title = title
         self.posterPath = posterPath
@@ -33,7 +35,7 @@ class Movie: NSObject {
             for movie in movieArray {
                 let title = movie["title"].string!
                 let overview = movie["overview"].string!
-                let posterPath = movie["poster_path"].string!
+                let posterPath = movie["poster_path"].string
                 movies.append(Movie(overview: overview, title: title, posterPath: posterPath));
             }
         }

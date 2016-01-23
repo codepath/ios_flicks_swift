@@ -8,17 +8,39 @@
 
 import UIKit
 import SwiftyJSON
+import MBProgressHUD
 
 class MoviesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var tableView: UITableView!
     var movies: [Movie]?
-
+    
+    var uiRefreshControl : UIRefreshControl!
+    @IBOutlet weak var errorView: UIView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.delegate = self;
         tableView.dataSource = self;
+        
+        // add refresh control
+        uiRefreshControl = UIRefreshControl()
+        uiRefreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
+        tableView.addSubview(uiRefreshControl)
+        
+        loadData()
+    }
+    
+    func refresh(sender:AnyObject)
+    {
+        self.uiRefreshControl.endRefreshing()
+        loadData()
+    }
+
+    func loadData() {
+        let spinningActivity = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        spinningActivity.labelText = "Loading movies..."
         
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
         let url = NSURL(string:"https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
@@ -33,13 +55,23 @@ class MoviesViewController: UIViewController, UITableViewDelegate, UITableViewDa
             completionHandler: { (dataOrNil, response, error) in
                 if let data = dataOrNil {
                     self.movies = Movie.getMovies(JSON(data : data))
+                    self.errorView.hidden = true
+
+                    // reload view with new data
                     self.tableView.reloadData()
+                } else {
+                    self.errorView.hidden = false
+                    if let e = error {
+                        NSLog("Error: \(e)")
+                    }
                 }
+                // stop spinning activity
+                spinningActivity.hide(true)
         });
         task.resume()
-        
-    }
 
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

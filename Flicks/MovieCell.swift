@@ -18,7 +18,9 @@ class MovieCell: UITableViewCell {
         didSet {
             movieLabel.text = movie.title
             overviewLabel.text = movie.overview
-            posterImageView.setImageWithURL(movie.posterUrl)
+            if let posterUrl = movie.posterUrl {
+                posterImageView.setImageWithURL(posterUrl)
+            }
         }
     }
 

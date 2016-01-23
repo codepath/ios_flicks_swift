@@ -6,5 +6,6 @@ use_frameworks!
 target 'Flicks' do
   pod 'AFNetworking'
   pod 'SwiftyJSON'
+  pod 'MBProgressHUD'
 end
 
