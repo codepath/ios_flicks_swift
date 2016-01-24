@@ -15,6 +15,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
     var movie: Movie! {
         didSet {
             overlayView.hidden = true
+            overlayView.backgroundColor = UIColor.flk_appThemeColor()
             if let posterUrl = movie.posterUrl {
                 posterImageView.contentMode = UIViewContentMode.ScaleAspectFill
                 posterImageView.fadeInImageFromUrl(posterUrl, placeholderImage: nil, fadeInDuration: 0.5)

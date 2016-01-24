@@ -18,6 +18,7 @@
 		04EEE3FC1C53915400222A3E /* UIImageViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EEE3FB1C53915400222A3E /* UIImageViewExtensions.swift */; };
 		04EEE3FE1C53933D00222A3E /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EEE3FD1C53933D00222A3E /* DetailViewController.swift */; };
 		04EEE4081C5444A100222A3E /* flicks-font-v2.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 04EEE4071C5444A100222A3E /* flicks-font-v2.ttf */; };
+		04EEE40B1C54C45F00222A3E /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EEE40A1C54C45F00222A3E /* Colors.swift */; };
 		4ED9E64CD3A82E08B9289E54 /* Pods_Flicks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56581D0094A412E562F1A79E /* Pods_Flicks.framework */; };
 /* End PBXBuildFile section */
 
@@ -35,6 +36,7 @@
 		04EEE3FB1C53915400222A3E /* UIImageViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageViewExtensions.swift; sourceTree = "<group>"; };
 		04EEE3FD1C53933D00222A3E /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		04EEE4071C5444A100222A3E /* flicks-font-v2.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "flicks-font-v2.ttf"; sourceTree = "<group>"; };
+		04EEE40A1C54C45F00222A3E /* Colors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		0AA1526A71B6182CE9796ADA /* Pods-Flicks.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Flicks.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Flicks/Pods-Flicks.debug.xcconfig"; sourceTree = "<group>"; };
 		56581D0094A412E562F1A79E /* Pods_Flicks.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Flicks.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4239C024D1B41A57848986A /* Pods-Flicks.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Flicks.release.xcconfig"; path = "Pods/Target Support Files/Pods-Flicks/Pods-Flicks.release.xcconfig"; sourceTree = "<group>"; };
@@ -73,8 +75,7 @@
 		04CF54D91C4768A5000BE58D /* Flicks */ = {
 			isa = PBXGroup;
 			children = (
-				04EEE4071C5444A100222A3E /* flicks-font-v2.ttf */,
-				04EEE3FB1C53915400222A3E /* UIImageViewExtensions.swift */,
+				04EEE4091C54C43F00222A3E /* appearance */,
 				04EEE3B61C48CFFC00222A3E /* views */,
 				04EEE3B11C47FB3400222A3E /* viewcontrollers */,
 				04EEE3B01C47FB2500222A3E /* models */,
@@ -111,6 +112,16 @@
 				04EEE3F91C53714B00222A3E /* MovieCollectionViewCell.swift */,
 			);
 			name = views;
+			sourceTree = "<group>";
+		};
+		04EEE4091C54C43F00222A3E /* appearance */ = {
+			isa = PBXGroup;
+			children = (
+				04EEE4071C5444A100222A3E /* flicks-font-v2.ttf */,
+				04EEE3FB1C53915400222A3E /* UIImageViewExtensions.swift */,
+				04EEE40A1C54C45F00222A3E /* Colors.swift */,
+			);
+			name = appearance;
 			sourceTree = "<group>";
 		};
 		841D99CC6FC891276BE63C41 /* Pods */ = {
@@ -260,6 +271,7 @@
 				04EEE3FC1C53915400222A3E /* UIImageViewExtensions.swift in Sources */,
 				04EEE3B51C48C68100222A3E /* Movie.swift in Sources */,
 				04EEE3FE1C53933D00222A3E /* DetailViewController.swift in Sources */,
+				04EEE40B1C54C45F00222A3E /* Colors.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

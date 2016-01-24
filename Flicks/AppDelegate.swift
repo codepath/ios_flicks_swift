@@ -22,18 +22,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         nowPlayingViewController.endpoint = "now_playing"
         nowPlayingNavigationController.tabBarItem.title = "Now Playing"
         nowPlayingNavigationController.tabBarItem.image = UIImage(named: "video")
+        // style navigation controller
+        nowPlayingNavigationController.navigationBar.barTintColor = UIColor.flk_appThemeColor()
+        nowPlayingNavigationController.navigationBar.tintColor = UIColor.darkGrayColor()
         
-
         let topRatedNavigationController = storyboard.instantiateViewControllerWithIdentifier("MoviesNavigationStoryboardId") as! UINavigationController
         let topRatedViewController = topRatedNavigationController.topViewController as! MoviesViewController
         topRatedViewController.endpoint = "top_rated"
         topRatedNavigationController.tabBarItem.title = "Top Rated"
         topRatedNavigationController.tabBarItem.image = UIImage(named: "star")
-
+        // style navigation controller
+        topRatedNavigationController.navigationBar.barTintColor = UIColor.flk_appThemeColor()
+        topRatedNavigationController.navigationBar.tintColor = UIColor.darkGrayColor()
 
         // Set up the Tab Bar Controller to have two tabs
         let tabBarController = UITabBarController()
         tabBarController.viewControllers = [nowPlayingNavigationController, topRatedNavigationController]
+        
+        // styling tab bar
+        tabBarController.tabBar.barTintColor = UIColor.flk_appThemeColor()
+        tabBarController.tabBar.tintColor = UIColor.blackColor() // color selected tab icon and text black
+        
         
         // Make the Tab Bar Controller the root view controller
         window?.rootViewController = tabBarController
