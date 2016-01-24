@@ -11,7 +11,6 @@ import UIKit
 
 extension UIImageView {
     
-    // ISSUE: images fade in even if they are coming from cache
     func fadeInImageFromUrl(url: NSURL, placeholderImage: UIImage?, fadeInDuration: NSTimeInterval) {
         let request = NSURLRequest(URL: url)
         self.setImageWithURLRequest(
