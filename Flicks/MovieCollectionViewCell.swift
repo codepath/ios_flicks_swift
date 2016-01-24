@@ -10,13 +10,23 @@ import UIKit
 
 class MovieCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var posterImageView: UIImageView!
+    @IBOutlet weak var overlayView: UIView!
     
     var movie: Movie! {
         didSet {
+            overlayView.hidden = true
             if let posterUrl = movie.posterUrl {
                 posterImageView.contentMode = UIViewContentMode.ScaleAspectFill
                 posterImageView.fadeInImageFromUrl(posterUrl, placeholderImage: nil, fadeInDuration: 0.5)
             }
         }
-    }    
+    }
+
+    func selectCell() {
+        overlayView.hidden = false
+    }
+    
+    func deselectCell() {
+        overlayView.hidden = true
+    }
 }

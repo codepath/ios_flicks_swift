@@ -27,4 +27,34 @@ extension UIImageView {
             failure: nil)
     }
     
+    
+    func loadLowResImageAndSwapToHiRes(lowResImageUrl: NSURL, hiResImageUrl: NSURL) {
+        let smallImageRequest = NSURLRequest(URL: lowResImageUrl)
+        let largeImageRequest = NSURLRequest(URL: hiResImageUrl)
+        
+        self.setImageWithURLRequest(
+            smallImageRequest,
+            placeholderImage: nil,
+            success: { (smallImageRequest, smallImageResponse, smallImage) -> Void in
+                self.alpha = 0.0
+                self.image = smallImage;
+                
+                UIView.animateWithDuration(0.3, animations: { () -> Void in
+                    self.alpha = 1.0
+                    }, completion: { (sucess) -> Void in
+                        self.setImageWithURLRequest(
+                            largeImageRequest,
+                            placeholderImage: smallImage,
+                            success: { (largeImageRequest, largeImageResponse, largeImage) -> Void in
+                                self.image = largeImage;
+                            },
+                            failure: { (request, response, error) -> Void in
+                        })
+                })
+            },
+            failure: { (request, response, error) -> Void in
+        })
+        
+    }
+    
 }

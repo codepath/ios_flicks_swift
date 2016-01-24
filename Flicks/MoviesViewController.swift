@@ -20,7 +20,8 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
     var searchController: UISearchController!
     var uiRefreshControl : UIRefreshControl!
     @IBOutlet weak var errorView: UIView!
-    @IBOutlet weak var searchView: UIView!
+    var endpoint : String! = "now_playing"
+    var lastSelectedCell : MovieCollectionViewCell?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,28 +35,13 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
         moviesCollectionView.addSubview(uiRefreshControl)
         
         // set up for search bar
-//        searchController = UISearchController(searchResultsController: nil)
-//        searchController.searchResultsUpdater = self
-//        searchController.dimsBackgroundDuringPresentation = false
-//        searchController.searchBar.sizeToFit()
-//        searchView.addSubview(searchController.searchBar)
-//        
-//        automaticallyAdjustsScrollViewInsets = false
-//        definesPresentationContext = true
-//        
-        
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
-        searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.sizeToFit()
-        searchController.searchBar.translucent = true
-        searchController.searchBar.barTintColor = UIColor.darkGrayColor()
         
-        searchView.addSubview(searchController.searchBar)
-        automaticallyAdjustsScrollViewInsets = false
+        navigationItem.titleView = searchController.searchBar
+        searchController.hidesNavigationBarDuringPresentation = false
         definesPresentationContext = true
-
-        
         
         loadData()
     }
@@ -71,7 +57,7 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
         spinningActivity.labelText = "Loading movies..."
         
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
-        let url = NSURL(string:"https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
+        let url = NSURL(string:"https://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
         let request = NSURLRequest(URL: url!)
         let session = NSURLSession(
             configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
@@ -103,7 +89,6 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {indexPath
@@ -118,33 +103,28 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
         return filteredMovies?.count ?? 0;
     }
     
-//    func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
-//        if (kind == UICollectionElementKindSectionHeader) {
-//            let headerView = moviesCollectionView.dequeueReusableSupplementaryViewOfKind(UICollectionElementKindSectionHeader, withReuseIdentifier: "HeaderView", forIndexPath: indexPath)
-//            headerView.addSubview(self.searchController.searchBar)
-//            return headerView
-//        }
-//        return UICollectionReusableView()
-//    }
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        let cell = moviesCollectionView.cellForItemAtIndexPath(indexPath) as! MovieCollectionViewCell
+        lastSelectedCell?.deselectCell()
+        cell.selectCell()
+        lastSelectedCell = cell
+    }
     
     func updateSearchResultsForSearchController(searchController: UISearchController) {
         if let searchText = searchController.searchBar.text {
-            
             filteredMovies = searchText.isEmpty ? movies : movies?.filter({ (movie:Movie) -> Bool in
                 movie.title.rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
             });
-            
             moviesCollectionView.reloadData()
         }
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        let movieCell = sender as! MovieCollectionViewCell
+        let selectedMovieIndexPath = moviesCollectionView.indexPathForCell(movieCell)
+        
+        let movie = filteredMovies![selectedMovieIndexPath!.row]
+        let detailVC = segue.destinationViewController as! DetailViewController
+        detailVC.movie = movie
     }
-    */
 }
