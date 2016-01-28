@@ -14,10 +14,10 @@ class Movie: NSObject {
     let HI_RES_POSTER_BASE_URL = "https://image.tmdb.org/t/p/original"
     let LOW_RES_POSTER_BASE_URL = "https://image.tmdb.org/t/p/w45"
 
-    var title : String
-    var overview : String
-    var posterPath : String?
-    var popularity : Float
+    private(set) var title : String
+    private(set) var overview : String
+    private(set) var posterPath : String?
+    private(set) var popularity : Float
     var posterUrl : NSURL? {
         get {
             return posterPath.map({ (path: String) -> NSURL in
@@ -47,12 +47,22 @@ class Movie: NSObject {
     }
     var id : Int
     
-    init(id: Int, overview: String, title: String, posterPath: String?, popularity: Float) {
+    private var releaseDateString : String
+    var releaseDate: NSDate? {
+        get {
+            let dateFormatter = NSDateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            return dateFormatter.dateFromString(releaseDateString)
+        }
+    }
+    
+    init(id: Int, overview: String, title: String, posterPath: String?, popularity: Float, releaseDateString: String) {
         self.id = id
         self.overview = overview
         self.title = title
         self.posterPath = posterPath
         self.popularity = popularity
+        self.releaseDateString = releaseDateString
     }
     
     class func getMovies(json: JSON) -> [Movie] {
@@ -64,8 +74,9 @@ class Movie: NSObject {
                 let posterPath = movie["poster_path"].string
                 let popularity = movie["popularity"].float!
                 let id = movie["id"].int!
+                let releaseDateString = movie["release_date"].string!
                 
-                movies.append(Movie(id: id, overview: overview, title: title, posterPath: posterPath, popularity: popularity));
+                movies.append(Movie(id: id, overview: overview, title: title, posterPath: posterPath, popularity: popularity, releaseDateString: releaseDateString));
             }
         }
         return movies

@@ -18,22 +18,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
         let nowPlayingNavigationController = storyboard.instantiateViewControllerWithIdentifier("MoviesNavigationStoryboardId") as! UINavigationController
-        let nowPlayingViewController = nowPlayingNavigationController.topViewController as! MoviesViewController
+        let nowPlayingViewController = nowPlayingNavigationController.topViewController as! MoviesTableViewController
         nowPlayingViewController.endpoint = "now_playing"
         nowPlayingNavigationController.tabBarItem.title = "Now Playing"
         nowPlayingNavigationController.tabBarItem.image = UIImage(named: "video")
         // style navigation controller
         nowPlayingNavigationController.navigationBar.barTintColor = UIColor.flk_appThemeColor()
         nowPlayingNavigationController.navigationBar.tintColor = UIColor.darkGrayColor()
+        nowPlayingNavigationController.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]  // Title's text color
+
         
         let topRatedNavigationController = storyboard.instantiateViewControllerWithIdentifier("MoviesNavigationStoryboardId") as! UINavigationController
-        let topRatedViewController = topRatedNavigationController.topViewController as! MoviesViewController
+        let topRatedViewController = topRatedNavigationController.topViewController as! MoviesTableViewController
         topRatedViewController.endpoint = "top_rated"
         topRatedNavigationController.tabBarItem.title = "Top Rated"
         topRatedNavigationController.tabBarItem.image = UIImage(named: "star")
         // style navigation controller
         topRatedNavigationController.navigationBar.barTintColor = UIColor.flk_appThemeColor()
         topRatedNavigationController.navigationBar.tintColor = UIColor.darkGrayColor()
+        nowPlayingNavigationController.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]  // Title's text color
+
 
         // Set up the Tab Bar Controller to have two tabs
         let tabBarController = UITabBarController()
