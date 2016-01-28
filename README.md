@@ -12,7 +12,7 @@ https://www.youtube.com/watch?v=V6GMZojJCk4
 
 ## Walkthrough of app using Table View
 
-![alt tag](https://github.com/codepath/ios_flicks_swift/blob/master/walkthroughs/flicks_walkthrough.gif)
+![alt tag](https://github.com/codepath/ios_flicks_swift/blob/master/walkthroughs/flicks_table_walkthrough.gif)
 
 ## Walkthrough of app using Collection View
 
@@ -27,4 +27,4 @@ Its a good idea to check how your app behaves on 3G or slower networks.
 https://www.natashatherobot.com/simulate-bad-network-ios-simulator/
 
 
-### Credit to uday (https://github.com/udaymitra/Flicks) for the original app
+* Credit to uday (https://github.com/udaymitra/Flicks) for the original app
