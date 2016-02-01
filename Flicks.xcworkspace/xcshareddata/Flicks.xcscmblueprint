@@ -5,17 +5,24 @@
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
     "A4BA96656A2952CAA6F2D02F3A16A5C1CF52D0D2" : 0,
+    "326BD05184B06C41E02B2BFD7AC54AC3A484F857" : 0,
     "8F68B2CE1C16FC77A119D3E174D8C938C5667C9B" : 0
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "49F4F73C-EE95-4F64-A609-60908BAE455D",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
     "A4BA96656A2952CAA6F2D02F3A16A5C1CF52D0D2" : "",
+    "326BD05184B06C41E02B2BFD7AC54AC3A484F857" : "..",
     "8F68B2CE1C16FC77A119D3E174D8C938C5667C9B" : "Flicks\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "Flicks",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
   "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Flicks.xcworkspace",
   "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/sumade\/iosBootcamp.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "326BD05184B06C41E02B2BFD7AC54AC3A484F857"
+    },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/udaymitra\/Flicks.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
