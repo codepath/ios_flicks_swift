@@ -20,7 +20,7 @@ UISearchResultsUpdating {
     var searchController: UISearchController!
     var uiRefreshControl : UIRefreshControl!
     @IBOutlet weak var errorView: UIView!
-    var endpoint : String! = "now_playing"
+    var endpoint: String = "now_playing"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,8 +33,8 @@ UISearchResultsUpdating {
         
         // add refresh control
         uiRefreshControl = UIRefreshControl()
-        uiRefreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
-        let refreshTitleAttr = [NSForegroundColorAttributeName: UIColor.blackColor()]
+        uiRefreshControl.addTarget(self, action: #selector(MoviesTableViewController.refresh(_:)), for: UIControlEvents.valueChanged)
+        let refreshTitleAttr = [NSForegroundColorAttributeName: UIColor.black]
         uiRefreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh", attributes:refreshTitleAttr)
         uiRefreshControl.backgroundColor = UIColor.flk_appThemeColor()
         uiRefreshControl.tintColor = UIColor.flk_appThemeColor()
@@ -54,42 +54,42 @@ UISearchResultsUpdating {
         loadData()
     }
     
-    func refresh(sender:AnyObject)
+    func refresh(_ sender:AnyObject)
     {
         loadData()
         self.uiRefreshControl.endRefreshing()
     }
     
     func loadData() {
-        let spinningActivity = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        spinningActivity.labelText = "Loading movies..."
+        let spinningActivity = MBProgressHUD.showAdded(to: self.view, animated: true)
+        spinningActivity?.labelText = "Loading movies..."
         
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
-        let url = NSURL(string:"https://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
-        let request = NSURLRequest(URL: url!)
-        let session = NSURLSession(
-            configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
+        let url = URL(string:"https://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
+        let request = URLRequest(url: url!)
+        let session = URLSession(
+            configuration: URLSessionConfiguration.default,
             delegate:nil,
-            delegateQueue:NSOperationQueue.mainQueue()
+            delegateQueue:OperationQueue.main
         )
         
-        let task : NSURLSessionDataTask = session.dataTaskWithRequest(request,
+        let task : URLSessionDataTask = session.dataTask(with: request,
             completionHandler: { (dataOrNil, response, error) in
                 if let data = dataOrNil {
                     self.movies = Movie.getMovies(JSON(data : data))
                     self.filteredMovies = self.movies
-                    self.errorView.hidden = true
+                    self.errorView.isHidden = true
                     
                     // reload view with new data
                     self.moviesTableView.reloadData()
                 } else {
-                    self.errorView.hidden = false
+                    self.errorView.isHidden = false
                     if let e = error {
                         NSLog("Error: \(e)")
                     }
                 }
                 // stop spinning activity
-                spinningActivity.hide(true)
+                spinningActivity?.hide(true)
         });
         task.resume()
         
@@ -99,7 +99,7 @@ UISearchResultsUpdating {
         super.didReceiveMemoryWarning()
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let movies = self.filteredMovies {
             return movies.count
         }else{
@@ -107,33 +107,33 @@ UISearchResultsUpdating {
         }
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = moviesTableView.dequeueReusableCellWithIdentifier("MovieTableViewCell", forIndexPath: indexPath) as! MovieTableViewCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = moviesTableView.dequeueReusableCell(withIdentifier: "MovieTableViewCell", for: indexPath) as! MovieTableViewCell
         
         let movie = filteredMovies![indexPath.row]
         cell.movie = movie
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        moviesTableView.deselectRowAtIndexPath(indexPath, animated: true)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        moviesTableView.deselectRow(at: indexPath, animated: true)
     }
         
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
+    func updateSearchResults(for searchController: UISearchController) {
         if let searchText = searchController.searchBar.text {
             filteredMovies = searchText.isEmpty ? movies : movies?.filter({ (movie:Movie) -> Bool in
-                movie.title.rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
+                movie.title.range(of: searchText, options: .caseInsensitive) != nil
             });
             moviesTableView.reloadData()
         }
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let movieCell = sender as! MovieTableViewCell
-        let selectedMovieIndexPath = moviesTableView.indexPathForCell(movieCell)
+        let selectedMovieIndexPath = moviesTableView.indexPath(for: movieCell)
         
         let movie = filteredMovies![selectedMovieIndexPath!.row]
-        let detailVC = segue.destinationViewController as! MoviesTableDetailViewController
+        let detailVC = segue.destination as! MoviesTableDetailViewController
         detailVC.movie = movie
     }
 }

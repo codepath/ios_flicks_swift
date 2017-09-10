@@ -21,7 +21,7 @@ class MovieTableViewCell: UITableViewCell {
             movieLabel.text = movie.title
             overviewLabel.text = movie.overview
             if let posterUrl = movie.posterUrl {
-                posterImageView.setImageWithURL(posterUrl)
+                posterImageView.setImageWith(posterUrl as URL)
             }
         }
     }
@@ -31,7 +31,7 @@ class MovieTableViewCell: UITableViewCell {
         // Initialization code
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state

@@ -14,20 +14,20 @@ class MovieCollectionViewCell: UICollectionViewCell {
     
     var movie: Movie! {
         didSet {
-            overlayView.hidden = true
+            overlayView.isHidden = true
             overlayView.backgroundColor = UIColor.flk_appThemeColor()
             if let posterUrl = movie.posterUrl {
-                posterImageView.contentMode = UIViewContentMode.ScaleAspectFill
+                posterImageView.contentMode = UIViewContentMode.scaleAspectFill
                 posterImageView.fadeInImageFromUrl(posterUrl, placeholderImage: nil, fadeInDuration: 0.5)
             }
         }
     }
 
     func selectCell() {
-        overlayView.hidden = false
+        overlayView.isHidden = false
     }
     
     func deselectCell() {
-        overlayView.hidden = true
+        overlayView.isHidden = true
     }
 }

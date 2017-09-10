@@ -11,15 +11,15 @@ import UIKit
 
 extension UIImageView {
     
-    func fadeInImageFromUrl(url: NSURL, placeholderImage: UIImage?, fadeInDuration: NSTimeInterval) {
-        let request = NSURLRequest(URL: url)
-        self.setImageWithURLRequest(
+    func fadeInImageFromUrl(_ url: URL, placeholderImage: UIImage?, fadeInDuration: TimeInterval) {
+        let request = URLRequest(url: url)
+        self.setImageWith(
             request,
             placeholderImage: placeholderImage,
             success: { (req, response, image) -> Void in
                 self.image = image
                 self.alpha = 0
-                UIView.animateWithDuration(fadeInDuration, animations: { () -> Void in
+                UIView.animate(withDuration: fadeInDuration, animations: { () -> Void in
                     self.alpha = 1
                 })
             },
@@ -27,21 +27,21 @@ extension UIImageView {
     }
     
     
-    func loadLowResImageAndSwapToHiRes(lowResImageUrl: NSURL, hiResImageUrl: NSURL) {
-        let smallImageRequest = NSURLRequest(URL: lowResImageUrl)
-        let largeImageRequest = NSURLRequest(URL: hiResImageUrl)
+    func loadLowResImageAndSwapToHiRes(_ lowResImageUrl: URL, hiResImageUrl: URL) {
+        let smallImageRequest = URLRequest(url: lowResImageUrl)
+        let largeImageRequest = URLRequest(url: hiResImageUrl)
         
-        self.setImageWithURLRequest(
+        self.setImageWith(
             smallImageRequest,
             placeholderImage: nil,
             success: { (smallImageRequest, smallImageResponse, smallImage) -> Void in
                 self.alpha = 0.0
                 self.image = smallImage;
                 
-                UIView.animateWithDuration(0.3, animations: { () -> Void in
+                UIView.animate(withDuration: 0.3, animations: { () -> Void in
                     self.alpha = 1.0
                     }, completion: { (sucess) -> Void in
-                        self.setImageWithURLRequest(
+                        self.setImageWith(
                             largeImageRequest,
                             placeholderImage: smallImage,
                             success: { (largeImageRequest, largeImageResponse, largeImage) -> Void in
