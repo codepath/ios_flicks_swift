@@ -37,7 +37,7 @@ class MoviesTableDetailViewController: UIViewController {
         scrollView.contentSize = CGSize(width: scrollView.frame.size.width, height: movieInfoView.frame.origin.y + movieInfoView.frame.size.height)
         
         if let posterUrl = movie?.lowResPosterUrl {
-            posterImageView.contentMode = UIViewContentMode.ScaleAspectFill
+            posterImageView.contentMode = UIViewContentMode.scaleAspectFill
             posterImageView.loadLowResImageAndSwapToHiRes(posterUrl, hiResImageUrl: movie!.hiResPosterUrl!)
         }
         
@@ -50,9 +50,9 @@ class MoviesTableDetailViewController: UIViewController {
 
             
             if let date = movie.releaseDate {
-                let dayTimePeriodFormatter = NSDateFormatter()
+                let dayTimePeriodFormatter = DateFormatter()
                 dayTimePeriodFormatter.dateFormat = "MMMM dd, yyyy"
-                releaseDateLabel.text = dayTimePeriodFormatter.stringFromDate(date)
+                releaseDateLabel.text = dayTimePeriodFormatter.string(from: date as Date)
             }else{
                 releaseDateLabel.text = ""
             }
@@ -60,14 +60,14 @@ class MoviesTableDetailViewController: UIViewController {
             
             populateAdditionalMovieDetails()
             
-            let newSynSize  = self.overviewLabel.sizeThatFits(CGSizeMake(self.overviewLabel.frame.size.width, CGFloat.max))
+            let newSynSize  = self.overviewLabel.sizeThatFits(CGSize(width: self.overviewLabel.frame.size.width, height: CGFloat.greatestFiniteMagnitude))
             var newSynFrame = self.overviewLabel.frame
             newSynFrame.size.height = newSynSize.height
             
             
             // adjust the container view inside the scroll view
             let newContainerHeight = min(self.movieInfoView.frame.height, newSynFrame.origin.y + newSynFrame.size.height)
-            self.movieInfoView.frame.size = CGSizeMake(self.movieInfoView.frame.width, newContainerHeight+50)
+            self.movieInfoView.frame.size = CGSize(width: self.movieInfoView.frame.width, height: newContainerHeight+50)
             
             // adjust the labels
             overviewLabel.frame = newSynFrame
@@ -75,7 +75,7 @@ class MoviesTableDetailViewController: UIViewController {
             // set the scroll height
             let contentWidth = self.scrollView.bounds.width
             let contentHeight = self.movieInfoView.frame.origin.y + self.movieInfoView.frame.height // some fudge factor
-            self.scrollView.contentSize = CGSizeMake(contentWidth, contentHeight)
+            self.scrollView.contentSize = CGSize(width: contentWidth, height: contentHeight)
             
             self.scrollView.layoutIfNeeded()
 
@@ -89,19 +89,19 @@ class MoviesTableDetailViewController: UIViewController {
     
     func populateAdditionalMovieDetails() {
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
-        let url = NSURL(string:"https://api.themoviedb.org/3/movie/\(self.movie!.id)?api_key=\(apiKey)")
-        let request = NSURLRequest(URL: url!)
-        let session = NSURLSession(
-            configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
+        let url = URL(string:"https://api.themoviedb.org/3/movie/\(self.movie!.id)?api_key=\(apiKey)")
+        let request = URLRequest(url: url!)
+        let session = URLSession(
+            configuration: URLSessionConfiguration.default,
             delegate:nil,
-            delegateQueue:NSOperationQueue.mainQueue()
+            delegateQueue:OperationQueue.main
         )
         
-        let task : NSURLSessionDataTask = session.dataTaskWithRequest(request,
+        let task : URLSessionDataTask = session.dataTask(with: request,
             completionHandler: { (dataOrNil, response, error) in
                 if let data = dataOrNil {
-                    if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
-                        data, options:[]) as? NSDictionary {
+                    if let responseDictionary = try! JSONSerialization.jsonObject(
+                        with: data, options:[]) as? NSDictionary {
                             let runtime = responseDictionary["runtime"] as! Int
                             let hours = runtime / 60;
                             let min = runtime % 60;

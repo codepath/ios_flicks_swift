@@ -14,28 +14,28 @@ class Movie: NSObject {
     let HI_RES_POSTER_BASE_URL = "https://image.tmdb.org/t/p/original"
     let LOW_RES_POSTER_BASE_URL = "https://image.tmdb.org/t/p/w45"
 
-    private(set) var title : String
-    private(set) var overview : String
-    private(set) var posterPath : String?
-    private(set) var popularity : Float
-    var posterUrl : NSURL? {
+    fileprivate(set) var title : String
+    fileprivate(set) var overview : String
+    fileprivate(set) var posterPath : String?
+    fileprivate(set) var popularity : Float
+    var posterUrl : URL? {
         get {
-            return posterPath.map({ (path: String) -> NSURL in
-                NSURL(string: POSTER_BASE_URL + path)!
+            return posterPath.map({ (path: String) -> URL in
+                URL(string: POSTER_BASE_URL + path)!
             })
         }
     }
-    var lowResPosterUrl : NSURL? {
+    var lowResPosterUrl : URL? {
         get {
-            return posterPath.map({ (path: String) -> NSURL in
-                NSURL(string: LOW_RES_POSTER_BASE_URL + path)!
+            return posterPath.map({ (path: String) -> URL in
+                URL(string: LOW_RES_POSTER_BASE_URL + path)!
             })
         }
     }
-    var hiResPosterUrl : NSURL? {
+    var hiResPosterUrl : URL? {
         get {
-            return posterPath.map({ (path: String) -> NSURL in
-                NSURL(string: HI_RES_POSTER_BASE_URL + path)!
+            return posterPath.map({ (path: String) -> URL in
+                URL(string: HI_RES_POSTER_BASE_URL + path)!
             })
         }
     }
@@ -47,12 +47,12 @@ class Movie: NSObject {
     }
     var id : Int
     
-    private var releaseDateString : String
-    var releaseDate: NSDate? {
+    fileprivate var releaseDateString : String
+    var releaseDate: Date? {
         get {
-            let dateFormatter = NSDateFormatter()
+            let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
-            return dateFormatter.dateFromString(releaseDateString)
+            return dateFormatter.date(from: releaseDateString)
         }
     }
     
@@ -65,7 +65,7 @@ class Movie: NSObject {
         self.releaseDateString = releaseDateString
     }
     
-    class func getMovies(json: JSON) -> [Movie] {
+    class func getMovies(_ json: JSON) -> [Movie] {
         var movies = [Movie]()
         if let movieArray = json["results"].array {
             for movie in movieArray {

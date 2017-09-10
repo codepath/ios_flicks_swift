@@ -31,7 +31,7 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
         
         // add refresh control
         uiRefreshControl = UIRefreshControl()
-        uiRefreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
+        uiRefreshControl.addTarget(self, action: #selector(MoviesViewController.refresh(_:)), for: UIControlEvents.valueChanged)
         moviesCollectionView.addSubview(uiRefreshControl)
         
         // set up for search bar
@@ -46,42 +46,42 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
         loadData()
     }
     
-    func refresh(sender:AnyObject)
+    func refresh(_ sender:AnyObject)
     {
         self.uiRefreshControl.endRefreshing()
         loadData()
     }
 
     func loadData() {
-        let spinningActivity = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        spinningActivity.labelText = "Loading movies..."
+        let spinningActivity = MBProgressHUD.showAdded(to: self.view, animated: true)
+        spinningActivity?.labelText = "Loading movies..."
         
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
-        let url = NSURL(string:"https://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
-        let request = NSURLRequest(URL: url!)
-        let session = NSURLSession(
-            configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
+        let url = URL(string:"https://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
+        let request = URLRequest(url: url!)
+        let session = URLSession(
+            configuration: URLSessionConfiguration.default,
             delegate:nil,
-            delegateQueue:NSOperationQueue.mainQueue()
+            delegateQueue:OperationQueue.main
         )
         
-        let task : NSURLSessionDataTask = session.dataTaskWithRequest(request,
+        let task : URLSessionDataTask = session.dataTask(with: request,
             completionHandler: { (dataOrNil, response, error) in
                 if let data = dataOrNil {
                     self.movies = Movie.getMovies(JSON(data : data))
                     self.filteredMovies = self.movies
-                    self.errorView.hidden = true
+                    self.errorView.isHidden = true
 
                     // reload view with new data
                     self.moviesCollectionView.reloadData()
                 } else {
-                    self.errorView.hidden = false
+                    self.errorView.isHidden = false
                     if let e = error {
                         NSLog("Error: \(e)")
                     }
                 }
                 // stop spinning activity
-                spinningActivity.hide(true)
+                spinningActivity?.hide(true)
         });
         task.resume()
 
@@ -91,40 +91,40 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
         super.didReceiveMemoryWarning()
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {indexPath
-        let cell = moviesCollectionView.dequeueReusableCellWithReuseIdentifier("MovieCollectionViewCell", forIndexPath: indexPath) as! MovieCollectionViewCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {indexPath
+        let cell = moviesCollectionView.dequeueReusableCell(withReuseIdentifier: "MovieCollectionViewCell", for: indexPath) as! MovieCollectionViewCell
         
         let movie = filteredMovies![indexPath.row]
         cell.movie = movie
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return filteredMovies?.count ?? 0;
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        let cell = moviesCollectionView.cellForItemAtIndexPath(indexPath) as! MovieCollectionViewCell
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = moviesCollectionView.cellForItem(at: indexPath) as! MovieCollectionViewCell
         lastSelectedCell?.deselectCell()
         cell.selectCell()
         lastSelectedCell = cell
     }
     
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
+    func updateSearchResults(for searchController: UISearchController) {
         if let searchText = searchController.searchBar.text {
             filteredMovies = searchText.isEmpty ? movies : movies?.filter({ (movie:Movie) -> Bool in
-                movie.title.rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
+                movie.title.range(of: searchText, options: .caseInsensitive) != nil
             });
             moviesCollectionView.reloadData()
         }
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let movieCell = sender as! MovieCollectionViewCell
-        let selectedMovieIndexPath = moviesCollectionView.indexPathForCell(movieCell)
+        let selectedMovieIndexPath = moviesCollectionView.indexPath(for: movieCell)
         
         let movie = filteredMovies![selectedMovieIndexPath!.row]
-        let detailVC = segue.destinationViewController as! DetailViewController
+        let detailVC = segue.destination as! DetailViewController
         detailVC.movie = movie
     }
 }
